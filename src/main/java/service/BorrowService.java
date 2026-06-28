@@ -9,13 +9,17 @@ import enums.BookStatus;
 import repository.BorrowRepository;
 
 import java.time.LocalDate;
-
+import java.util.List;
 
 
 public class BorrowService {
 
 
     private BorrowRepository borrowRepository;
+
+    // Temporary ID generator
+    // Later Database will handle IDs
+    private int nextRecordId = 1;
 
 
 
@@ -33,8 +37,17 @@ public class BorrowService {
     public boolean borrowBook(Patron patron, Book book) {
 
 
+        // Validate input
+        if(patron == null || book == null) {
 
-        // Check if book is available
+            return false;
+
+        }
+
+
+
+        // Check book availability
+
         if(book.getStatus() != BookStatus.AVAILABLE) {
 
             return false;
@@ -44,6 +57,7 @@ public class BorrowService {
 
 
         // Change book status
+
         book.setStatus(BookStatus.CHECKED_OUT);
 
 
@@ -53,7 +67,7 @@ public class BorrowService {
 
         BorrowRecord record = new BorrowRecord(
 
-                1,
+                nextRecordId++,
                 patron,
                 book,
                 LocalDate.now(),
@@ -77,9 +91,9 @@ public class BorrowService {
 
 
 
-    // Return a book
-    public boolean returnBook(BorrowRecord record) {
+    // Return book
 
+    public boolean returnBook(BorrowRecord record) {
 
 
         if(record == null) {
@@ -90,17 +104,12 @@ public class BorrowService {
 
 
 
-        // Update book status
-
         record.getBook()
                 .setStatus(BookStatus.AVAILABLE);
 
 
 
-        // Set return date
-
         record.setReturnDate(LocalDate.now());
-
 
 
         return true;
@@ -113,15 +122,11 @@ public class BorrowService {
 
     // Get all borrow records
 
-    public void getAllRecords() {
+    public List<BorrowRecord> getAllRecords() {
 
-
-        for(BorrowRecord record : borrowRepository.findAll()) {
-
-            System.out.println(record);
-
-        }
+        return borrowRepository.findAll();
 
     }
+
 
 }

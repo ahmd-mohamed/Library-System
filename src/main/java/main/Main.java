@@ -8,7 +8,9 @@ import entity.Patron;
 import entity.User;
 import entity.BorrowRecord;
 
+
 import enums.BookStatus;
+
 
 import repository.BookRepository;
 import repository.UserRepository;
@@ -28,48 +30,61 @@ public class Main {
     public static void main(String[] args) {
 
 
+
         System.out.println("Welcome to Library Management System");
 
 
 
+
         /*
-         * ===========================
+         * ==========================
          * BOOK MODULE
-         * ===========================
+         * ==========================
          */
 
 
-        BookRepository bookRepository = new BookRepository();
+        BookRepository bookRepository =
+                new BookRepository();
+
+
 
         BookService bookService =
                 new BookService(bookRepository);
 
 
 
+
         Book book1 = new Book(
+
                 1,
                 "Clean Code",
                 "Robert Martin",
                 "Programming",
                 2008,
                 BookStatus.AVAILABLE
+
         );
 
 
 
         Book book2 = new Book(
+
                 2,
                 "Java Programming",
                 "James Gosling",
                 "Programming",
                 2015,
                 BookStatus.AVAILABLE
+
         );
 
 
 
         bookService.addBook(book1);
+
         bookService.addBook(book2);
+
+
 
 
 
@@ -86,9 +101,9 @@ public class Main {
 
 
         /*
-         * ===========================
+         * ==========================
          * USER MODULE
-         * ===========================
+         * ==========================
          */
 
 
@@ -97,8 +112,10 @@ public class Main {
 
 
 
+
         UserService userService =
                 new UserService(userRepository);
+
 
 
 
@@ -108,33 +125,44 @@ public class Main {
 
 
 
+
         Admin admin = new Admin(
+
                 1,
                 "Ahmed Admin",
                 "admin@gmail.com",
                 "admin",
                 "1234"
+
         );
 
 
 
+
         Librarian librarian = new Librarian(
+
                 2,
                 "Ali Librarian",
                 "librarian@gmail.com",
                 "ali",
                 "1234"
+
         );
 
 
 
+
+
         Patron patron = new Patron(
+
                 3,
                 "Mohamed Patron",
                 "patron@gmail.com",
                 "mohamed",
                 "1234"
+
         );
+
 
 
 
@@ -162,43 +190,54 @@ public class Main {
 
 
         /*
-         * ===========================
-         * LOGIN TEST
-         * ===========================
+         * ==========================
+         * AUTHENTICATION TEST
+         * ==========================
          */
 
 
         System.out.println("\nLogin Test:");
 
+
+
         User loggedUser =
                 authService.login(
-                        "mohamed",
+                        "admin",
                         "1234"
                 );
 
 
+
+
         if(loggedUser != null) {
+
 
             System.out.println("Login Successful");
 
             System.out.println(loggedUser);
 
+
         }
         else {
 
-            System.out.println("Login Failed");
+
+            System.out.println("Invalid username or password");
+
 
         }
+
+
 
 
 
 
 
         /*
-         * ===========================
+         * ==========================
          * BORROW MODULE
-         * ===========================
+         * ==========================
          */
+
 
 
         BorrowRepository borrowRepository =
@@ -206,8 +245,10 @@ public class Main {
 
 
 
+
         BorrowService borrowService =
                 new BorrowService(borrowRepository);
+
 
 
 
@@ -221,13 +262,12 @@ public class Main {
 
 
 
-        // Patron borrows book
-
         boolean borrowed =
                 borrowService.borrowBook(
                         patron,
                         book1
                 );
+
 
 
 
@@ -245,16 +285,29 @@ public class Main {
 
 
 
+
+
         /*
-         * ===========================
-         * SHOW BORROW RECORDS
-         * ===========================
+         * ==========================
+         * BORROW RECORDS
+         * ==========================
          */
+
 
 
         System.out.println("\nBorrow Records:");
 
-        borrowService.getAllRecords();
+
+
+        for(BorrowRecord record :
+                borrowService.getAllRecords()) {
+
+
+            System.out.println(record);
+
+
+        }
+
 
 
 
@@ -263,15 +316,18 @@ public class Main {
 
 
         /*
-         * ===========================
-         * RETURN BOOK TEST
-         * ===========================
+         * ==========================
+         * RETURN BOOK
+         * ==========================
          */
 
 
 
         BorrowRecord record =
-                borrowRepository.findById(1);
+                borrowService
+                        .getAllRecords()
+                        .get(0);
+
 
 
 
@@ -280,7 +336,10 @@ public class Main {
 
 
 
+
+
         System.out.println("\nReturn Result: " + returned);
+
 
 
 
@@ -293,9 +352,22 @@ public class Main {
 
 
 
+
+
         System.out.println("\nBorrow Records After Return:");
 
-        borrowService.getAllRecords();
+
+
+        for(BorrowRecord borrowRecord :
+                borrowService.getAllRecords()) {
+
+
+            System.out.println(borrowRecord);
+
+
+        }
+
+
 
 
     }

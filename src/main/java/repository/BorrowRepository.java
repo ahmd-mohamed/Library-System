@@ -32,11 +32,11 @@ public class BorrowRepository {
 
 
     // Get all records
-    public List<BorrowRecord> findAll() {
+ public List<BorrowRecord> findAll(){
 
-        return new ArrayList<>(records);
+    return new ArrayList<>(records);
 
-    }
+}
 
 
 

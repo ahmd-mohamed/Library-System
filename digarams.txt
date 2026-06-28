@@ -1,0 +1,323 @@
+تمام 👌 كده أنت بتفكر بالطريقة الصح. قبل ما نكتب أي class لازم يكون عندنا **Blueprint** نمشي عليه، وإلا هنرجع نتوه في النص.
+
+هنثبت أولًا الـ **Architecture Reference Diagram** للمشروع.
+
+## 🏗️ Project Architecture
+
+```text
+                    Library Management System
+
+
+                         Main
+                          |
+                          |
+                 Controller Layer
+                  (User Interface)
+                          |
+                          |
+                 Service Layer
+                (Business Logic)
+                          |
+                          |
+              Repository Layer
+             (Data Access / Storage)
+                          |
+                          |
+                    Entity Layer
+                  (Data Models)
+```
+
+---
+
+# 📦 عدد الـ Packages
+
+هنعمل 6 Packages فقط:
+
+```text
+librarysystem
+
+│
+├── entity
+│
+├── enums
+│
+├── repository
+│
+├── service
+│
+├── controller
+│
+└── main
+```
+
+---
+
+# 1) entity Package
+
+## (Data / Models)
+
+دي الكلاسات اللي تمثل حاجات موجودة في النظام.
+
+يعني:
+
+> "إيه الأشياء اللي عندي؟"
+
+هيكون فيها:
+
+```text
+entity
+
+├── Book.java
+├── User.java
+├── Admin.java
+├── Librarian.java
+├── Patron.java
+└── BorrowRecord.java
+```
+
+مثال:
+
+Book:
+
+```text
+Book
+---------
+id
+title
+author
+genre
+year
+status
+```
+
+هنا مفيش قرار:
+
+* هل أضيف كتاب؟
+* هل أسمح بالاستعارة؟
+
+هو مجرد بيانات.
+
+---
+
+# 2) enums Package
+
+## (Constants)
+
+الحاجات اللي ليها قيم محددة.
+
+```text
+enums
+
+├── Role.java
+└── BookStatus.java
+```
+
+مثال:
+
+```java
+BookStatus
+
+AVAILABLE
+CHECKED_OUT
+RESERVED
+```
+
+---
+
+# 3) repository Package
+
+## (Storage Layer)
+
+ده مكان تخزين البيانات.
+
+دلوقتي:
+
+```java
+ArrayList
+```
+
+بعدين:
+
+```text
+Database
+```
+
+هيكون:
+
+```text
+repository
+
+├── BookRepository.java
+├── UserRepository.java
+└── BorrowRepository.java
+```
+
+مسؤوليته:
+
+* save
+* delete
+* find
+* update
+
+مثال:
+
+```java
+bookRepository.save(book);
+```
+
+---
+
+# 4) service Package ⭐
+
+## (Business Logic)
+
+ده عقل النظام.
+
+هنا القرارات.
+
+```text
+service
+
+├── BookService.java
+├── UserService.java
+├── BorrowService.java
+└── AuthService.java
+```
+
+مثال:
+
+مين يقرر الكتاب ينفع يتعار؟
+مش Book ❌
+
+مش Repository ❌
+
+Service ✅
+
+```text
+BorrowService
+
+check:
+- book exists?
+- available?
+- user allowed?
+
+then borrow
+```
+
+---
+
+# 5) controller Package
+
+## (Input / Output)
+
+ده الطبقة اللي تتعامل مع المستخدم.
+
+مثلاً Menu:
+
+```text
+1- Add Book
+2- Search Book
+3- Borrow Book
+```
+
+الكلاس:
+
+```text
+controller
+
+└── LibraryController.java
+```
+
+هو يقول:
+
+"المستخدم طلب إضافة كتاب"
+
+فيكلم:
+
+```text
+BookService
+```
+
+---
+
+# 6) main Package
+
+تشغيل البرنامج فقط:
+
+```text
+main
+
+└── Main.java
+```
+
+---
+
+# الشكل النهائي كمرجع:
+
+```text
+                 Main
+                  |
+                  v
+          Controller Package
+                  |
+                  v
+           Service Package
+           (Logic)
+                  |
+                  v
+        Repository Package
+        (Data Storage)
+                  |
+                  v
+          Entity Package
+          (Objects)
+```
+
+---
+
+# مثال عملي على Book
+
+لما نضيف كتاب:
+
+```text
+User
+ |
+ v
+LibraryController
+
+"Add Book"
+
+ |
+ v
+
+BookService
+
+"هل البيانات صحيحة؟"
+
+ |
+ v
+
+BookRepository
+
+"خزن الكتاب"
+
+ |
+ v
+
+ArrayList<Book>
+
+```
+
+---
+
+# إذن قبل الكود اتفقنا:
+
+✅ 6 Packages
+✅ Entity = Data
+✅ Service = Logic
+✅ Repository = Storage
+✅ Controller = Interaction
+✅ Main = تشغيل
+
+الخطوة القادمة المنطقية:
+نرسم **Class Diagram للـ Book Module فقط** (Book + BookRepository + BookService + Controller) وبعدها نكتب أول class. ده هيخليك تفهم ليه كل class موجود.
